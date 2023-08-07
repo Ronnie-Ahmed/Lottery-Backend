@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract Lottery is Ownable, ERC20, ReentrancyGuard {
+contract Lottery is Ownable, ReentrancyGuard {
     // Error messages
     error NotEnoughMoneytoBuyTicket();
     error NotEnoughTicket();
@@ -36,7 +35,7 @@ contract Lottery is Ownable, ERC20, ReentrancyGuard {
     mapping(uint256 => address) tickettoholder;
 
     // Constructor
-    constructor() ERC20("LotteryTime", "LT") {
+    constructor() {
         currenttime = block.timestamp;
     }
 
@@ -79,8 +78,6 @@ contract Lottery is Ownable, ERC20, ReentrancyGuard {
 
         (bool success, ) = owner().call{value: price}("");
         require(success, "Transaction failed");
-
-        // Mint tokens to the user and update the ticket amount for the user
 
         uint256[] memory ticketnumbers = new uint256[](amount);
         for (uint256 i = 0; i < amount; i++) {
@@ -159,37 +156,30 @@ contract Lottery is Ownable, ERC20, ReentrancyGuard {
         return blockValue % limit;
     }
 
-    //Function to get the starting time of the lottery
     function getstarttime() public view returns (uint256) {
         return lotterystarttime;
     }
 
-    //Function to get the ending time of the lottery
     function getendtime() public view returns (uint256) {
         return lotteryendtime;
     }
 
-    //Function to get the current time
     function getcurrenttime() public view returns (uint256) {
         return currenttime;
     }
 
-    //Function to get the prize amount
     function getprizeamount() public view returns (uint256) {
         return prizeamount;
     }
 
-    //Function to get the winner ticket number
     function winnerticketNumber() public view returns (uint256) {
         return winnerTicketNumber;
     }
 
-    //Function to get the winner address
     function getwinneraddress() public view returns (address) {
         return winnerAddress;
     }
 
-    //Function to change the ticket price
     function changeticketprice(
         uint256 newprice
     ) external onlyOwner nonReentrant {
@@ -199,7 +189,6 @@ contract Lottery is Ownable, ERC20, ReentrancyGuard {
         ticketprice = newprice;
     }
 
-    //Function to change the lottery time length
     function changeLotterytime(
         uint256 _newblocktime
     ) external onlyOwner nonReentrant {
@@ -209,37 +198,30 @@ contract Lottery is Ownable, ERC20, ReentrancyGuard {
         lotterytime = _newblocktime;
     }
 
-    //Function to get the ticket amount of a user
     function amountofmyticket() public view returns (uint256) {
         return ticketamount[msg.sender];
     }
 
-    //Function to get the ticket number of a user
     function myholdingtickets() public view returns (uint256[] memory) {
         return tickets[msg.sender];
     }
 
-    //Function to get the ticket holder of a ticket
     function checkticketholder(uint256 ticketId) public view returns (address) {
         return tickettoholder[ticketId];
     }
 
-    //Function to get lottery time length
     function getLotterytime() public view returns (uint256) {
         return lotterytime;
     }
 
-    //Function to get ticket price
     function getticketprice() public view returns (uint256) {
         return ticketprice;
     }
 
-    //Function to get the maximum amount of ticket
     function getmaxamountofticket() public view returns (uint256) {
         return maxamountofticket;
     }
 
-    //Function to change the maximum amount of ticket
     function changemaxamountofticket(
         uint256 _newamount
     ) external onlyOwner nonReentrant {
